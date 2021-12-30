@@ -3,7 +3,7 @@ import unittest
 from lama.util import decorators
 
 
-class MyTestCase(unittest.TestCase):
+class TestDecorator(unittest.TestCase):
 
     @decorators.debug
     def test_log(self):
