@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from lama.util.StreamerBuilder import StreamerBuilder
+from lama.util.StreamerBuilder import StreamerBuilder, to_list
 
 
 class TestStreamBuilder(unittest.TestCase):
@@ -24,18 +24,19 @@ class TestStreamBuilder(unittest.TestCase):
     def test_map(self):
         def my_sum(x):
             return x + 1
+
         expected = [2, 3, 4]
-        result = self.builder.map(my_sum).collect(StreamerBuilder.to_list)
+        result = self.builder.map(my_sum).collect(to_list)
         self.assertListEqual(result, expected)
 
     def test_filter(self):
         expected = [3]
-        result = self.builder.filter(lambda x: x > 2).collect(StreamerBuilder.to_list)
+        result = self.builder.filter(lambda x: x > 2).collect(to_list)
         self.assertListEqual(result, expected)
 
     def test_map_filter(self):
         expected = [3, 4]
-        result = self.builder.map(lambda x: x + 1).filter(lambda x: x > 2).collect(StreamerBuilder.to_list)
+        result = self.builder.map(lambda x: x + 1).filter(lambda x: x > 2).collect(to_list)
         self.assertListEqual(result, expected)
 
 
