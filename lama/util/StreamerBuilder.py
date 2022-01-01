@@ -18,6 +18,10 @@ def to_list(iterator: It[T]) -> t.List[T]:
     return list(iterator)
 
 
+def to_set(iterator: It[T]) -> t.Set[T]:
+    return set(iterator)
+
+
 def to_ndarray(iterator: It[T], dtpye) -> np.narray[T]:
     return np.asarray(list(iterator), dtpye)
 
@@ -63,4 +67,10 @@ class StreamerBuilder:
         for callback in self._callbacks:
             self._iterator = callback(self._iterator)
         return fun(self._iterator)
+
+    def consume(self, fun: t.Callable[[It[T]], It[T]]):
+        for it in self._iterator:
+            fun(it)
+        return
+
 
