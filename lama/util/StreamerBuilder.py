@@ -17,6 +17,9 @@ def to_dictionary(iterator: It[T], key_mapper: t.Callable[[T], V] = lambda it: i
 def to_list(iterator: It[T]) -> t.List[T]:
     return list(iterator)
 
+def to_tuple(iterator: It[T]) -> t.Tuple[T]:
+    return tuple(iterator)
+
 
 def to_set(iterator: It[T]) -> t.Set[T]:
     return set(iterator)
@@ -72,5 +75,4 @@ class StreamerBuilder:
         for it in self._iterator:
             fun(it)
         return
-
 

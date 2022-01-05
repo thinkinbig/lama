@@ -2,6 +2,7 @@ import typing as t
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from pandas.core.common import SettingWithCopyWarning
 
 from lama.util.decorators import suppress_warning
