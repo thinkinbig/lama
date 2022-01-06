@@ -19,13 +19,14 @@ def timer(func):
     return _wrapper_timer
 
 
-def suppress_warning(warning):
+def suppress(excepts, action=lambda _: None):
     def _warning_decorator(func):
         @functools.wraps(func)
         def _wrapper_warning_decorator(*args, **kwargs):
-            with warnings.catch_warnings():
-                warnings.filterwarnings('ignore', category=warning)
+            try:
                 res = func(*args, **kwargs)
+            except excepts:
+                action()
             return res
         return _wrapper_warning_decorator
     return _warning_decorator

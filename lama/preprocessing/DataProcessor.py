@@ -3,22 +3,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from sklearn import preprocessing
 from pandas.core.common import SettingWithCopyWarning
 
-from lama.util.decorators import suppress_warning
+from lama.util.decorators import suppress
 
 def nans(df: pd.DataFrame) -> int:
     return df.isnull().sum()
 
 
-def change_object_cols(se: pd.DataFrame, rule=lambda value: range(len(value))) -> np.ndarray:
+def change_object_col(se: pd.DataFrame, rule=lambda value: range(len(value))) -> np.ndarray:
     value = se.unique().tolist()
     value.sort()
     return se.map(pd.Series(rule(value), index=value)).values
 
+def standarize_col(df: pd.DataFrame) -> np.ndarray:
+    return preprocessing.StandardScaler().fit_transform(df.values.reshape(-1, 1))
 
-@suppress_warning(warning=SettingWithCopyWarning)
-def reformat_dataframe(df: pd.DataFrame, features: t.List[str], mapper) -> pd.DataFrame:
+
+@suppress(excepts=SettingWithCopyWarning)
+def reformat_dataframe(df: pd.DataFrame, features: t.List[str], mapper: t.Callable[[pd.DataFrame], pd.DataFrame]) -> pd.DataFrame:
     """
     reformat the dataframe column by column with mapper, the function will replace 
     the given feature columns by slice, as python doesn't support pointer.
@@ -36,3 +40,7 @@ def reformat_dataframe(df: pd.DataFrame, features: t.List[str], mapper) -> pd.Da
         df.loc[:, feature] = se_mapper
     return df
 
+
+def split_with_index(df: pd.DataFrame, index: int) -> t.Iterable[pd.DataFrame]:
+    yield df[:index]
+    yield df[index:]
