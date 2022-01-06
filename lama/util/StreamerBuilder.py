@@ -17,6 +17,10 @@ def to_dictionary(iterator: It[T], key_mapper: t.Callable[[T], V] = lambda it: i
     return {key_mapper(it): values_mapper(it) for it in iterator}
 
 
+def identity(t: T) -> T:
+    return t
+
+
 def to_list(iterator: It[T]) -> t.List[T]:
     return list(iterator)
 
@@ -38,16 +42,7 @@ class StreamerBuilder:
     support chaining functions to make code more readable.
 
     The merit of implementing this class is that the functions won't
-    be actually invoked until it is collected or consumed. so basically
-    it is also possible to branch out different operations as needed.
-
-
-    e.g.
-    >>> list = range(10)
-    >>> builder = StreamBuilder.build(list).map(...).map(...)
-        # Different Builder derive from the same parent
-    >>> builder_1 = builder.copy().filter(>0).collect(to_list)
-    >>> builder_2 = builder.copy().map(+1).collect(to_ndarray)
+    be actually invoked until it is collected or consumed.
     """
 
     def __init__(self, iterator: It[T]):
@@ -83,15 +78,16 @@ class StreamerBuilder:
         return self
 
     @suppress(excepts=StopIteration)
-    def reduce(self, f: t.Callable[[T, U], T]) -> T:
+    def reduce(self, f: t.Callable[[T, U], T]) -> It[T]:
         def _reduce(iterable: t.Iterable[T]):
             _iterator = self._to_iterator(iterable)
             value = next(_iterator)
             for data in _iterator:
                 value = f(value, data)
-            return value
+            return [value]
         self._register_callback(_reduce)
         return self
+        
 
     def split(self, spliter: t.Callable[[T], It[T]]) -> It[T]:
         def _split(iterator: t.Iterable[T]):
