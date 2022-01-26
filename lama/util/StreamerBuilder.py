@@ -24,6 +24,7 @@ def identity(t: T) -> T:
 def to_list(iterator: It[T]) -> t.List[T]:
     return list(iterator)
 
+
 def to_tuple(iterator: It[T]) -> t.Tuple[T]:
     return tuple(iterator)
 
@@ -36,7 +37,7 @@ def to_ndarray(iterator: It[T], dtpye) -> np.narray[T]:
     return np.asarray(list(iterator), dtpye)
 
 
-class StreamerBuilder:
+class StreamerBuilder(t.Generic[T]):
     """
     StreamerBuilder is a wrapper class to wrap iterator and
     support chaining functions to make code more readable.
@@ -87,7 +88,6 @@ class StreamerBuilder:
             return [value]
         self._register_callback(_reduce)
         return self
-        
 
     def split(self, spliter: t.Callable[[T], It[T]]) -> It[T]:
         def _split(iterator: t.Iterable[T]):
@@ -99,16 +99,13 @@ class StreamerBuilder:
         self._register_callback(_split)
         return self
 
-
     def _register_callback(self, callback: t.Callable[..., t.Iterable[T]]):
         self._callbacks.append(callback)
-
 
     def collect(self, fun: t.Callable[[It[T]], It[T]]) -> It[T]:
         for callback in self._callbacks:
             self._iterator = callback(self._iterator)
         return fun(self._iterator)
-
 
     def consume(self, fun: t.Callable[[[T]], It[T]]):
         for callback in self._callbacks:
@@ -117,10 +114,8 @@ class StreamerBuilder:
             fun(it)
         return
 
-
     def copy(self):
         return copy.deepcopy(self)
-
 
     def _to_iterator(self, iterable: t.Iterable[T]):
         for data in iterable:
