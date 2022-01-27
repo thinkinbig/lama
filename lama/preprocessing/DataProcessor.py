@@ -50,7 +50,7 @@ def reformat_dataframe(df: pd.DataFrame, features: t.List[str], mapper: t.Callab
     """
     for feature in features:
         se_mapper = mapper(df[feature])
-        df.loc[:, feature] = se_mapper
+        df[feature] = se_mapper
     return df
 
 
