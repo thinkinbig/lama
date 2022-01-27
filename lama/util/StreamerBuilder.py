@@ -85,7 +85,7 @@ class StreamerBuilder(t.Generic[T]):
             value = next(_iterator)
             for data in _iterator:
                 value = f(value, data)
-            return [value]
+            return value
         self._register_callback(_reduce)
         return self
 
