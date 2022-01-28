@@ -1,12 +1,11 @@
 from __future__ import annotations
 import copy
 from io import IOBase
-import gc
 import typing as t
 
 import numpy as np
 
-from lama.util.decorators import suppress
+from lama.util.decorators import experimental, suppress
 
 T = t.TypeVar('T')
 U = t.TypeVar('U')
@@ -39,8 +38,8 @@ def to_ndarray(iterator: It[T], dtpye) -> np.narray[T]:
     return np.asarray(list(iterator), dtpye)
 
 
+@experimental
 class StreamerBuilder(t.Generic[T]):
-
     """
 
     StreamerBuilder is a wrapper class to wrap iterator and
@@ -57,6 +56,8 @@ class StreamerBuilder(t.Generic[T]):
 
     !!! Don't call it after collected or consumed !!!
 
+    Args:
+        t (generic type): Changed in runtime, no type inference engineering
     """
 
     def __init__(self, iterator: It[T]):

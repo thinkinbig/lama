@@ -28,3 +28,22 @@ def suppress(excepts, action=lambda _: None):
             return res
         return _wrapper_warning_decorator
     return _warning_decorator
+
+
+def experimental(cls):
+    """
+    Decorator to indicate the class definition is not stable
+
+    Returns:
+        cls: class to be decorated
+    """
+    # Make copy of original __init__, so we can call it without recursion
+    cls_init = cls.__init__
+
+    def __init__(self, *args, **kwargs):
+        cls_init(self, *args, **kwargs)
+
+    # Set the class' __init__ to the new one
+    cls.__init__ = __init__
+
+    return cls
