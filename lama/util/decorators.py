@@ -1,7 +1,5 @@
 import functools
 from datetime import time
-import warnings
-from numpy import result_type
 
 
 def timer(func):

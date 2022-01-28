@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from lama.util.StreamerBuilder import StreamerBuilder, to_list
+from lama.util.StreamerBuilder import StreamerBuilder, identity, to_list
 
 
 class TestStreamBuilder(unittest.TestCase):
@@ -12,14 +12,8 @@ class TestStreamBuilder(unittest.TestCase):
     def test_to_list(self):
         expected = [1, 2, 3]
         assert self.builder._iterator is not None
-        result = self.builder.collect(StreamerBuilder.to_list)
+        result = self.builder.collect(to_list)
         self.assertListEqual(result, expected)
-
-    def test_to_ndarray(self):
-        expected = np.array([1, 2, 3])
-        assert self.builder._iterator is not None
-        result = self.builder.collect(StreamerBuilder.to_ndarray)
-        self.assertCountEqual(result, expected)
 
     def test_map(self):
         def my_sum(x):
@@ -36,7 +30,8 @@ class TestStreamBuilder(unittest.TestCase):
 
     def test_map_filter(self):
         expected = [3, 4]
-        result = self.builder.map(lambda x: x + 1).filter(lambda x: x > 2).collect(to_list)
+        result = self.builder.map(
+            lambda x: x + 1).filter(lambda x: x > 2).collect(to_list)
         self.assertListEqual(result, expected)
 
 

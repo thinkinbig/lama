@@ -1,5 +1,7 @@
 from __future__ import annotations
 import copy
+from io import IOBase
+import gc
 import typing as t
 
 import numpy as np
@@ -38,25 +40,46 @@ def to_ndarray(iterator: It[T], dtpye) -> np.narray[T]:
 
 
 class StreamerBuilder(t.Generic[T]):
+
     """
+
     StreamerBuilder is a wrapper class to wrap iterator and
     support chaining functions to make code more readable.
 
-    The merit of implementing this class is that the functions won't
+    The philosophy is that the functions won't
     be actually invoked until it is collected or consumed.
+
+    This class is designed for io streams like TextFileReaders, but it also
+    support normal iterators like list or array.
+
+    While using normal iterator, remember that the builder is one-off.
+    Since the streams will be lost after invoked.
+
+    !!! Don't call it after collected or consumed !!!
+
     """
 
     def __init__(self, iterator: It[T]):
         if not isinstance(iterator, t.Iterable):
-            raise Exception("Streamer Builder must accept an Iterable")
+            raise Exception(
+                "Streamer Builder must accept an instance from Iterable")
         self._iterator = iterator
         self._callbacks = []
+
+    def __del__(self):
+        # finalize stream
+        if isinstance(self._iterator, IOBase) and not self._iterator.closed:
+            self._iterator.close()
+        del self._iterator
+
+    def get_iterator(self) -> T:
+        return self.iterator
 
     @staticmethod
     def build(iterator: It[T]) -> StreamerBuilder:
         return StreamerBuilder(iterator)
 
-    def map(self, f: t.Callable[[T], U]) -> StreamerBuilder:
+    def map(self, function: t.Callable[[T], U]) -> StreamerBuilder:
         """
         Maps every unit in Iterator with function
 
@@ -64,7 +87,7 @@ class StreamerBuilder(t.Generic[T]):
 
         def _mapper(iterator: It[T]) -> It[U]:
             for data in iterator:
-                yield f(data)
+                yield function(data)
 
         self._register_callback(_mapper)
         return self
@@ -103,16 +126,19 @@ class StreamerBuilder(t.Generic[T]):
         self._callbacks.append(callback)
 
     def collect(self, fun: t.Callable[[It[T]], It[T]]) -> It[T]:
+        _iterator = self._iterator
         for callback in self._callbacks:
-            self._iterator = callback(self._iterator)
-        return fun(self._iterator)
+            _iterator = callback(_iterator)
+        del self
+        return fun(_iterator)
 
     def consume(self, fun: t.Callable[[[T]], It[T]]):
+        _iterator = self._iterator
         for callback in self._callbacks:
-            self._iterator = callback(self._iterator)
-        for it in self._iterator:
+            _iterator = callback(_iterator)
+        for it in _iterator:
             fun(it)
-        return
+        del self
 
     def copy(self):
         return copy.deepcopy(self)
