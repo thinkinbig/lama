@@ -5,6 +5,7 @@ import pandas as pd
 import seaborn as sns
 from sklearn import preprocessing
 from pandas.core.common import SettingWithCopyWarning
+from lama.util.StreamerBuilder import to_list
 
 from lama.util.decorators import suppress
 
@@ -13,10 +14,11 @@ def nans(df: pd.DataFrame) -> int:
     return df.isnull().sum()
 
 
-def change_object_col(se: pd.DataFrame, rule=lambda value: range(len(value))) -> np.ndarray:
+def change_object_col(se: pd.DataFrame, rule=lambda value: range(len(value))) -> pd.DataFrame:
     """
 
     change object type to numerical type
+    if the dataframe contains nan, which means the value will be processed later,the method will leave it intact.
 
     Args:
         se (pd.DataFrame): [dataframe to change]
@@ -25,9 +27,18 @@ def change_object_col(se: pd.DataFrame, rule=lambda value: range(len(value))) ->
     Returns:
         np.ndarray: [df dataframe or numpy arrat]
     """
+    se.fillna(-1, inplace=True)
     value = se.unique().tolist()
-    value.sort()
-    return se.map(pd.Series(rule(value), index=value)).values
+    if -1 in value:
+        value.remove(-1)
+        keys = to_list(rule(value))
+        keys.insert(0, -1)
+        value.sort()
+        value.insert(0, -1)
+    else:
+        value.sort()
+        keys = rule(value)
+    return se.map(pd.Series(keys, index=value)).values
 
 
 def standarize_col(df: pd.DataFrame) -> np.ndarray:
