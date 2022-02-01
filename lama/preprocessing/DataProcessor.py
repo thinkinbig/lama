@@ -27,6 +27,7 @@ def change_object_col(se: pd.DataFrame, rule=lambda value: range(len(value))) ->
     Returns:
         np.ndarray: [df dataframe or numpy arrat]
     """
+
     se.fillna(-1, inplace=True)
     value = se.unique().tolist()
     if -1 in value:
@@ -68,3 +69,21 @@ def reformat_dataframe(df: pd.DataFrame, features: t.List[str], mapper: t.Callab
 def split_with_index(df: pd.DataFrame, index: int) -> t.Iterable[pd.DataFrame]:
     yield df[:index]
     yield df[index:]
+
+
+def stream_groupby_csv(path: str, key: str, agg: t.Dict[str], chunk_size: int = 10**6, dtype=None):
+    """
+    A stream provider that reads from large csv file 
+    and group the csv by key
+
+    Args:
+        path (str): filepath
+        key (str): key to groupby
+        agg (Dict[str]): aggregate columns
+        chunk_size (int, optional): chunksize. Defaults to 10**6.
+        dtype (DtypeLike, optional): Dtype. Defaults to None.
+    """
+    reader = pd.read_csv(path, chunksize=chunk_size, dtype=dtype)
+    orphans = pd.DataFrame()
+    for df in reader:
+        df = pd.concat((orphans, df))
