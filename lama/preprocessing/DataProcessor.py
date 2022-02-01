@@ -5,7 +5,7 @@ import pandas as pd
 import seaborn as sns
 from sklearn import preprocessing
 from pandas.core.common import SettingWithCopyWarning
-from lama.util.StreamerBuilder import to_list
+from lama.util import to_list
 
 from lama.util.decorators import suppress
 

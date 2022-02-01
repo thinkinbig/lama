@@ -1,11 +1,9 @@
 from __future__ import annotations
-import copy
+from lama.util.decorators import suppress
 from io import IOBase
 import typing as t
+import copy
 
-import numpy as np
-
-from lama.util.decorators import experimental, suppress
 
 T = t.TypeVar('T')
 U = t.TypeVar('U')
@@ -13,32 +11,6 @@ V = t.TypeVar('V')
 It = t.TypeVar('It', bound=t.Iterator)
 
 
-def to_dictionary(iterator: It[T], key_mapper: t.Callable[[T], V] = lambda it: it[0],
-                  values_mapper: t.Callable[[T], U] = lambda it: it[1]) -> t.Dict[V, U]:
-    return {key_mapper(it): values_mapper(it) for it in iterator}
-
-
-def identity(t: T) -> T:
-    return t
-
-
-def to_list(iterator: It[T]) -> t.List[T]:
-    return list(iterator)
-
-
-def to_tuple(iterator: It[T]) -> t.Tuple[T]:
-    return tuple(iterator)
-
-
-def to_set(iterator: It[T]) -> t.Set[T]:
-    return set(iterator)
-
-
-def to_ndarray(iterator: It[T], dtpye) -> np.narray[T]:
-    return np.asarray(list(iterator), dtpye)
-
-
-@experimental
 class StreamerBuilder(t.Generic[T]):
     """
 
@@ -73,9 +45,6 @@ class StreamerBuilder(t.Generic[T]):
             self._iterator.close()
         del self._iterator
 
-    def get_iterator(self) -> T:
-        return self.iterator
-
     @staticmethod
     def build(iterator: It[T]) -> StreamerBuilder:
         return StreamerBuilder(iterator)
@@ -94,6 +63,7 @@ class StreamerBuilder(t.Generic[T]):
         return self
 
     def filter(self, f: t.Callable[[T], bool]) -> StreamerBuilder:
+
         def _filter(iterator: t.Iterable[T]):
             for data in iterator:
                 if f(data):
@@ -133,7 +103,7 @@ class StreamerBuilder(t.Generic[T]):
         del self
         return fun(_iterator)
 
-    def consume(self, fun: t.Callable[[[T]], It[T]]):
+    def consume(self, fun: t.Callable[[T]]):
         _iterator = self._iterator
         for callback in self._callbacks:
             _iterator = callback(_iterator)

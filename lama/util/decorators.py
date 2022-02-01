@@ -1,5 +1,9 @@
 import functools
 from datetime import time
+import logging
+import os
+
+from log import LOG_DIR
 
 
 def timer(func):
@@ -17,14 +21,28 @@ def timer(func):
     return _wrapper_timer
 
 
+def enable_logging(filename, level=logging.DEBUG):
+    def _wrap_decorator(func):
+        @functools.wraps(func)
+        def _wrapper_logging_decorator(*args, **kwargs):
+            _log_name = os.path.join(LOG_DIR, filename)
+            logging.basicConfig(filename=_log_name,
+                                encoding='utf-8', level=level)
+            logging.log(f"Entering into the function {func}.")
+            func(*args, **kwargs)
+            logging.log(f"Leaving the function {func}.\n")
+        return _wrapper_logging_decorator
+    return _wrap_decorator
+
+
 def suppress(excepts, action=lambda _: None):
     def _warning_decorator(func):
         @functools.wraps(func)
         def _wrapper_warning_decorator(*args, **kwargs):
             try:
                 res = func(*args, **kwargs)
-            except excepts:
-                action()
+            except excepts as e:
+                action(e)
             return res
         return _wrapper_warning_decorator
     return _warning_decorator
