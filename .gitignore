@@ -1,6 +1,7 @@
 /data
 /.idea
 /dist
+/log
 __pycache__/
 /.pytest_cache
 /.ipynb_checkpoints

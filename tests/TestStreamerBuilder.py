@@ -7,7 +7,7 @@ from lama.util.StreamerBuilder import StreamerBuilder
 class TestStreamerBuilder(unittest.TestCase):
 
     def setUp(self):
-        start = iter(range(0, 100))
+        start = iter([1, 2, 3])
         self.builder = StreamerBuilder.build(start)
 
     def test_to_list(self):
@@ -37,6 +37,17 @@ class TestStreamerBuilder(unittest.TestCase):
 
     def test_consume(self):
         self.builder.consume(print)
+
+    def test_async_map_collect(self):
+        def my_sum(x):
+            return x + 1
+        expected = [2, 3, 4]
+        result = self.builder.async_map(my_sum).async_collect(util.to_list)
+        self.assertListEqual(result, expected)
+
+    def test_async_map_consume(self):
+        self.builder.async_map(
+            lambda x: x ** 2).async_consume(print)
 
 
 if __name__ == '__main__':

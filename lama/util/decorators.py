@@ -28,9 +28,12 @@ def enable_logging(filename, level=logging.DEBUG):
             _log_name = os.path.join(LOG_DIR, filename)
             logging.basicConfig(filename=_log_name,
                                 encoding='utf-8', level=level)
-            logging.log(f"Entering into the function {func}.")
-            func(*args, **kwargs)
-            logging.log(f"Leaving the function {func}.\n")
+            logging.log(level=level, msg=f"Entering into the function {func}.")
+            try:
+                func(*args, **kwargs)
+            except Exception as e:
+                logging.error(str(e))
+            logging.log(level=level, msg=f"Leaving the function {func}.\n")
         return _wrapper_logging_decorator
     return _wrap_decorator
 

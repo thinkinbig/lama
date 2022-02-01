@@ -1,4 +1,6 @@
 from __future__ import annotations
+import asyncio
+
 from lama.util.decorators import suppress
 from io import IOBase
 import typing as t
@@ -100,7 +102,6 @@ class StreamerBuilder(t.Generic[T]):
         _iterator = self._iterator
         for callback in self._callbacks:
             _iterator = callback(_iterator)
-        del self
         return fun(_iterator)
 
     def consume(self, fun: t.Callable[[T]]):
@@ -113,6 +114,28 @@ class StreamerBuilder(t.Generic[T]):
 
     def copy(self):
         return copy.deepcopy(self)
+
+    def async_map(self, mapper):
+        self._callbacks.append(asyncio.coroutine(mapper))
+        return self
+
+    def async_collect(self, func):
+        result = asyncio.get_event_loop().run_until_complete(self._aysnc_gather_iterator())
+        return func(result)
+
+    def async_consume(self, func):
+        result = asyncio.get_event_loop().run_until_complete(self._aysnc_gather_iterator())
+        func(result)
+
+    def _async_connect(self, data):
+        next = yield from self._callbacks[0](data)
+        for f in self._callbacks[1:]:
+            next = yield from f(next)
+        return next
+
+    async def _aysnc_gather_iterator(self):
+        return await asyncio.gather(*[self._async_connect(value)
+                                    for value in self._iterator])
 
     def _to_iterator(self, iterable: t.Iterable[T]):
         for data in iterable:
