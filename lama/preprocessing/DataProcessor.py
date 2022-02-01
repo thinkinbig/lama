@@ -71,7 +71,7 @@ def split_with_index(df: pd.DataFrame, index: int) -> t.Iterable[pd.DataFrame]:
     yield df[index:]
 
 
-def stream_groupby_csv(path: str, key: str, agg: t.Dict[str], chunk_size: int = 10**6, dtype=None):
+def stream_groupby_csv(path: str, key: str, agg: t.Dict[str, str], chunk_size: int = 10**6, dtype=None):
     """
     A stream provider that reads from large csv file 
     and group the csv by key
@@ -79,7 +79,7 @@ def stream_groupby_csv(path: str, key: str, agg: t.Dict[str], chunk_size: int = 
     Args:
         path (str): filepath
         key (str): key to groupby
-        agg (Dict[str]): aggregate columns
+        agg (Dict[str, str]): aggregate columns
         chunk_size (int, optional): chunksize. Defaults to 10**6.
         dtype (DtypeLike, optional): Dtype. Defaults to None.
     """
@@ -87,3 +87,4 @@ def stream_groupby_csv(path: str, key: str, agg: t.Dict[str], chunk_size: int = 
     orphans = pd.DataFrame()
     for df in reader:
         df = pd.concat((orphans, df))
+
