@@ -1,7 +1,7 @@
 from __future__ import annotations
 import asyncio
 
-from lama.util.decorators import suppress
+from lama.util.decorators import experimental, suppress
 from io import IOBase
 import typing as t
 import copy
@@ -12,7 +12,10 @@ U = t.TypeVar('U')
 V = t.TypeVar('V')
 It = t.TypeVar('It', bound=t.Iterator)
 
+__all__ = ['StreamerBuilder']
 
+
+@experimental
 class StreamerBuilder(t.Generic[T]):
     """
 
@@ -29,6 +32,8 @@ class StreamerBuilder(t.Generic[T]):
     Since the streams will be lost after invoked.
 
     !!! Don't call it after collected or consumed !!!
+
+    This class is marked experimental because asyncronous interface is still not stable
 
     Args:
         t (generic type): Changed in runtime, no type inference engineering

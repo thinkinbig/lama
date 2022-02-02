@@ -3,7 +3,8 @@
 /log
 .DS_STORE
 *.csv
-*.excel
+*.xls
+*.xlsx
 *.log
 __pycache__/
 /.pytest_cache

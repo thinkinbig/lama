@@ -6,6 +6,9 @@ import os
 from log import LOG_DIR
 
 
+__all__ = ['enable_logging', 'suppress', 'experimental']
+
+
 def enable_logging(filename, level=logging.NOTSET, logger_name=None):
     def _wrap_decorator(func):
         @functools.wraps(func)
