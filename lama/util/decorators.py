@@ -6,7 +6,7 @@ import os
 from log import LOG_DIR
 
 
-def enable_logging(filename, level=logging.INFO, logger_name=None):
+def enable_logging(filename, level=logging.NOTSET, logger_name=None):
     def _wrap_decorator(func):
         @functools.wraps(func)
         def _wrapper_logging_decorator(*args, **kwargs):
@@ -29,7 +29,7 @@ def enable_logging(filename, level=logging.INFO, logger_name=None):
             logger.addHandler(fh)
             logger.addHandler(ch)
 
-            logger.info(msg=f"Entering into the function {func}.")
+            logger.info(msg=f"Entering into the function {func.__name__}.")
             try:
                 value = func(*args, **kwargs)
                 # check not None
@@ -37,7 +37,7 @@ def enable_logging(filename, level=logging.INFO, logger_name=None):
                     logger.info(msg=f'Returned value is: {value}')
             except Exception as e:
                 logger.error(str(e))
-            logger.info(msg=f"Leaving the function {func}.\n")
+            logger.info(msg=f"Leaving the function {func.__name__}.\n")
             return value
         return _wrapper_logging_decorator
     return _wrap_decorator

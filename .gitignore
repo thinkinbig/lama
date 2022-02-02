@@ -4,6 +4,7 @@
 .DS_STORE
 *.csv
 *.excel
+*.log
 __pycache__/
 /.pytest_cache
 /.ipynb_checkpoints

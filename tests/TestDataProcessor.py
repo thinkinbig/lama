@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 import pandas as pd
@@ -25,12 +26,13 @@ class TestDataProcessor(unittest.TestCase):
         self.assertListEqual(expected_col1, list(res['col1']))
         self.assertListEqual(expected_col2, list(res['col2']))
 
-    @enable_logging("test.log")
+    @enable_logging("test_stream_groupby_csv.log")
     def test_stream_groupby_csv(self):
         path = os.path.join(DATA_DIR, 'new_merchant_transactions.csv')
         key = 'card_id'
         for chunk in stream_groupby_csv(path, key):
-            pass
+            logger = logging.getLogger()
+            logger.debug(chunk)
 
 
 if __name__ == '__main__':
