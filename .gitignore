@@ -1,6 +1,7 @@
 /.idea
 /dist
 /log
+.DS_STORE
 *.csv
 *.excel
 __pycache__/

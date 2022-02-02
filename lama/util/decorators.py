@@ -6,34 +6,39 @@ import os
 from log import LOG_DIR
 
 
-def timer(func):
-    """Print the runtime of the decorated function"""
-
-    @functools.wraps(func)
-    def _wrapper_timer(*args, **kwargs):
-        start_time = time.perf_counter()  # 1
-        value = func(*args, **kwargs)
-        end_time = time.perf_counter()  # 2
-        run_time = end_time - start_time  # 3
-        print(f"Finished {func.__name__!r} in {run_time:.4f} secs")
-        return value
-
-    return _wrapper_timer
-
-
-def enable_logging(filename, level=logging.DEBUG):
+def enable_logging(filename, level=logging.INFO, logger_name=None):
     def _wrap_decorator(func):
         @functools.wraps(func)
         def _wrapper_logging_decorator(*args, **kwargs):
             _log_name = os.path.join(LOG_DIR, filename)
-            logging.basicConfig(filename=_log_name,
-                                encoding='utf-8', level=level)
-            logging.log(level=level, msg=f"Entering into the function {func}.")
+            # create logger for prd_ci
+            logger = logging.getLogger(logger_name)
+            logger.setLevel(level)
+
+            # create formatter and add it to the handlers
+            formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            fh = logging.FileHandler(_log_name)
+            fh.setLevel(level)
+            fh.setFormatter(formatter)
+            ch = logging.StreamHandler()
+            ch.setLevel(level)
+            ch.setFormatter(formatter)
+
+            # add handler
+            logger.addHandler(fh)
+            logger.addHandler(ch)
+
+            logger.info(msg=f"Entering into the function {func}.")
             try:
-                func(*args, **kwargs)
+                value = func(*args, **kwargs)
+                # check not None
+                if value:
+                    logger.info(msg=f'Returned value is: {value}')
             except Exception as e:
-                logging.error(str(e))
-            logging.log(level=level, msg=f"Leaving the function {func}.\n")
+                logger.error(str(e))
+            logger.info(msg=f"Leaving the function {func}.\n")
+            return value
         return _wrapper_logging_decorator
     return _wrap_decorator
 

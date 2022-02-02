@@ -1,6 +1,9 @@
+import os
 import unittest
 import pandas as pd
-from lama.preprocessing.DataProcessor import change_object_col, reformat_dataframe
+from data import DATA_DIR
+from lama.preprocessing.DataProcessor import change_object_col, reformat_dataframe, stream_groupby_csv
+from lama.util.decorators import enable_logging
 
 
 class TestDataProcessor(unittest.TestCase):
@@ -21,6 +24,13 @@ class TestDataProcessor(unittest.TestCase):
             self.list, ['col1', 'col2'], change_object_col)
         self.assertListEqual(expected_col1, list(res['col1']))
         self.assertListEqual(expected_col2, list(res['col2']))
+
+    @enable_logging("test.log")
+    def test_stream_groupby_csv(self):
+        path = os.path.join(DATA_DIR, 'new_merchant_transactions.csv')
+        key = 'card_id'
+        for chunk in stream_groupby_csv(path, key):
+            pass
 
 
 if __name__ == '__main__':

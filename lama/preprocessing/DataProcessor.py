@@ -71,20 +71,29 @@ def split_with_index(df: pd.DataFrame, index: int) -> t.Iterable[pd.DataFrame]:
     yield df[index:]
 
 
-def stream_groupby_csv(path: str, key: str, agg: t.Dict[str, str], chunk_size: int = 10**6, dtype=None):
+def stream_groupby_csv(path: str, key: str, chunk_size: int = 10**6, dtype=None) -> t.Iterable[pd.DataFrame]:
     """
-    A stream provider that reads from large csv file 
+    A stream provider that reads from large csv file
     and group the csv by key
 
     Args:
         path (str): filepath
         key (str): key to groupby
-        agg (Dict[str, str]): aggregate columns
         chunk_size (int, optional): chunksize. Defaults to 10**6.
         dtype (DtypeLike, optional): Dtype. Defaults to None.
     """
-    reader = pd.read_csv(path, chunksize=chunk_size, dtype=dtype)
-    orphans = pd.DataFrame()
-    for df in reader:
-        df = pd.concat((orphans, df))
 
+    with pd.read_csv(path, chunksize=chunk_size, dtype=dtype) as reader:
+        orphans = pd.DataFrame()
+        for chunk in reader:
+            # Add the previous orphans to the chunk
+            chunk = pd.concat((orphans, chunk))
+
+            last_val = chunk[key].iloc[-1]
+            is_orphan = chunk[key] == last_val
+
+            orphans = chunk[is_orphan]
+            yield chunk[~is_orphan]
+
+        if len(orphans):
+            yield orphans
