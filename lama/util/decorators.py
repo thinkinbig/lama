@@ -36,7 +36,7 @@ def enable_logging(filename, level=logging.NOTSET, logger_name=None):
             try:
                 value = func(*args, **kwargs)
                 # check not None
-                if value:
+                if value is not None:
                     logger.info(msg=f'Returned value is: {value}')
             except Exception as e:
                 logger.error(str(e))
