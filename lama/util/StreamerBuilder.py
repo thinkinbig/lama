@@ -109,7 +109,7 @@ class StreamerBuilder(t.Generic[T]):
             _iterator = callback(_iterator)
         return fun(_iterator)
 
-    def consume(self, fun: t.Callable[[T]]):
+    def consume(self, fun: t.Callable[[T], None]):
         _iterator = self._iterator
         for callback in self._callbacks:
             _iterator = callback(_iterator)
