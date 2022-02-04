@@ -1,5 +1,4 @@
 import functools
-from datetime import time
 import logging
 import os
 
@@ -24,15 +23,12 @@ def enable_logging(filename, level=logging.NOTSET, logger_name=None):
             fh = logging.FileHandler(_log_name)
             fh.setLevel(level)
             fh.setFormatter(formatter)
-            ch = logging.StreamHandler()
-            ch.setLevel(level)
-            ch.setFormatter(formatter)
 
             # add handler
             logger.addHandler(fh)
-            logger.addHandler(ch)
 
             logger.info(msg=f"Entering into the function {func.__name__}.")
+            value = None
             try:
                 value = func(*args, **kwargs)
                 # check not None
