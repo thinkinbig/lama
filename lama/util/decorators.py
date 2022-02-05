@@ -8,7 +8,18 @@ from log import LOG_DIR
 __all__ = ['enable_logging', 'suppress', 'experimental']
 
 
+_handler_pool = {}
+
+
 def enable_logging(filename, level=logging.NOTSET, logger_name=None):
+
+    def _get_from_pool(key):
+        # if not _handler_pool[key]:
+        if key not in _handler_pool:
+            _handler_pool[key] = logging.FileHandler(key)
+            _handler_pool[key].flush()
+        return _handler_pool[key]
+
     def _wrap_decorator(func):
         @functools.wraps(func)
         def _wrapper_logging_decorator(*args, **kwargs):
@@ -20,7 +31,7 @@ def enable_logging(filename, level=logging.NOTSET, logger_name=None):
             # create formatter and add it to the handlers
             formatter = logging.Formatter(
                 '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-            fh = logging.FileHandler(_log_name)
+            fh = _get_from_pool(_log_name)
             fh.setLevel(level)
             fh.setFormatter(formatter)
 
