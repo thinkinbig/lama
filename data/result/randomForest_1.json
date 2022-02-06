@@ -1,1 +1,1 @@
-{"model": "RandomForestRegressor", "best_params": {"max_depth": 9, "max_features": 80, "min_samples_leaf": 14, "min_samples_split": 2, "n_estimators": 29}, "best_score": 1.6430001455100776}
+{"model": "RandomForestRegressor", "best_params": {"max_depth": 9, "max_features": 80, "min_samples_leaf": 53, "min_samples_split": 2, "n_estimators": 87}, "best_score": 1.6297258326345316}
