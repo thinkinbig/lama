@@ -1,1 +1,53 @@
-<mxfile host="app.diagrams.net" modified="2022-02-08T22:28:39.986Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" version="16.5.4" etag="qB90Iu_kyS4MO8CXjmln" type="github"><diagram id="iToCI4LLukcGqggkCm6J">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-02-08T22:41:53.075Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" etag="DroTYR-7z_MbJ26i2Mms" version="16.5.4" type="github">
+  <diagram id="iToCI4LLukcGqggkCm6J" name="Page-1">
+    <mxGraphModel dx="1018" dy="552" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-1" value="&lt;font style=&quot;font-size: 23px&quot;&gt;merchants.csv&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="110" width="360" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="rEN_bg48IdsEwn1KUvEp-2" target="rEN_bg48IdsEwn1KUvEp-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-17" value="&lt;font style=&quot;font-size: 17px&quot;&gt;left join on &#39;merchant_id&#39;&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="rEN_bg48IdsEwn1KUvEp-14">
+          <mxGeometry x="-0.107" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=23;" edge="1" parent="1" source="rEN_bg48IdsEwn1KUvEp-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-22" value="&lt;font style=&quot;font-size: 17px&quot;&gt;write()&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=23;" vertex="1" connectable="0" parent="rEN_bg48IdsEwn1KUvEp-19">
+          <mxGeometry x="-0.3397" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-2" value="&lt;font style=&quot;font-size: 23px&quot;&gt;new_merchant&lt;br&gt;_transcations.csv&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="240" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-16" value="&lt;font style=&quot;font-size: 17px&quot;&gt;left join on &#39;merchant_id&#39;&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="rEN_bg48IdsEwn1KUvEp-3" target="rEN_bg48IdsEwn1KUvEp-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=23;" edge="1" parent="1" source="rEN_bg48IdsEwn1KUvEp-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-23" value="&lt;font style=&quot;font-size: 17px&quot;&gt;write()&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=23;" vertex="1" connectable="0" parent="rEN_bg48IdsEwn1KUvEp-20">
+          <mxGeometry x="-0.1118" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-3" value="&lt;font style=&quot;font-size: 23px&quot;&gt;historical_&lt;br&gt;transactions.csv&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="240" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="rEN_bg48IdsEwn1KUvEp-21" value="transactions_pre.csv&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=23;" vertex="1" parent="1">
+          <mxGeometry x="280" y="450" width="260" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
