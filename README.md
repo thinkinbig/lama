@@ -2,7 +2,6 @@
 
 Team 11
 
-
 [our github repo](https://github.com/thinkinbig/lama)
 
 ## Content
@@ -86,3 +85,22 @@ Submissions are scored on the root mean squared error.
     
     **The hyperparameters by default will be saved as yaml(or json) configuration files to enable a quick and non-side-effect altering.**
 
+# Project Summary
+
+
+In this section we will explain what we have done in our project. You can also refer to our presentation which we think (unfortunately though) are quite detailed.
+
+### Short Introduction
+
+Our project is separated into different sections. The general utility class lies in util folder, all datas and **`results`** will be found in data folder. In preprocessing folder you will find a preprocessing notebook, which records how we process the datas, and some utility classes specified in preprocessing datas.
+
+A short introduction to our Streamerbuilder.You might think designing such a class unnecessary. In fact, we have a big dataset we think may cause trouble directly reading into the memory. When designing this class, we have no idea whether this table has an effects on our datasets into the model, that is, the model's training and testing dataset can also be that large. Luckily that doesn't happen. We have also suggest python can read the whole files as stream concurrently, however, reading a file and processing it can't run in pararell because of [GIL](https://wiki.python.org/moin/GlobalInterpreterLock). So speeding up failed, but we managed to limits only 10**6 lines into memory.
+
+### Data Processing
+
+The first thing we've done is to analyze the data. In short, we have inspected every data dictionaries, tried to figure out each columns' meaning and their correlations. We have also plot some distributions to see their distributions. After that we replace NaNs with means and drop outliers outside IQR, converting category columns into numericals(similar to Integer Encoding, but we've forgotten this method). Then we aggregate all tables into one large train-, test table, appending features extracted from other tables.
+Honestly speaking there is a lot more we can do to refine our feature engineering. For example, we can observe the user with the same card-id's merchants patronizations in timeseries. And extracts their favorite shops as new features, from this aspect we believe a RNN model might help. Since we don't have enough time preparing a vastly different datasets to be feed into RNN, we gave up this idea.
+
+### Model Training
+
+We have prepared different tree ensembled algorithms based on decision tree. We don't spend a lot of time tuning parameters because we hope to solve underfitting problem with other tactics. Firstly we trained with random forest, the model is underfitting even after hyperparameter optimizations. However, training with random forest proves that decision tree based algorithms work. So we continued with our model, to solve the underfitting problem we select another boosting tree model(lightGBM and Xgboost). This time it works better even before hyperparamters tuning. However, when we want to combine these models together, we don't know if there exists a tree based stacking library. After making our stacking by ourself, we make only one layer, and the time left don't allow us to put the whole process into one layer sothat we can reuse the layer and training stacking with multiple times.
